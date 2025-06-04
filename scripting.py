@@ -89,3 +89,41 @@ def rhs(rv, t):
     fx = -grav*(m1 + m2)*(x/(r*r*r))
     fy = -grav*(m1 + m2)*(y/(r*r*r))
     return (vx, vy, fx, fy)
+
+# assign every column of the array to its meaning
+sol = integrate.odeint(rhs, init, t)
+xpos = sol[:, 0]
+ypos = sol[:, 1]
+xvel = sol[:, 2]
+yvel = sol[:, 3]
+if planetInfo is not None:
+    print("So naturally the experimental perihelion is also %4.3E meters." %
+np.max(xpos) )
+    print('The experimental aphelion is %4.3E meters.' % np.abs(np.min(xpos)))
+# graph of x and y positions over time
+plt.plot(t , xpos, label = "x-position")
+plt.plot(t , ypos, label = "y-position")
+plt.title("Planet's position as projected on x- and y-axis")
+plt.legend(loc ='best')
+plt.xlabel('Time $(seconds)$')
+plt.ylabel('Position relative to sun $(meters)$')
+plt.grid()
+plt.show()
+# graph of x and y velocities over time
+# for an ellips, the orbital velocity is higher when the planet is closer to the sun
+plt.plot(t , xvel, label="x-velocity")
+plt.plot(t , yvel, label="y-velocity")
+plt.title("Planet's velocities in x- and y-direction")
+plt.legend(loc='best')
+plt.xlabel('Time $(seconds)$')
+plt.ylabel('Velocities $(meters/second)$')
+plt.grid()
+plt.show()
+# graph of x and y positions respective to each other, shows shape of orbit
+plt.plot(xpos, ypos)
+plt.title("Representation of planet's orbit")
+plt.gca().set_aspect('equal')
+plt.scatter(0, 0, color='red', label='Sun')
+plt.xlabel('Position $(meters)$')
+plt.ylabel('Position $(meters)$')
+plt.legend(loc='upper right')
