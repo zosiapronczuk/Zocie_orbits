@@ -1,7 +1,9 @@
-#import numpy as np
-#import matplotlib.pyplot as plt
-#from scipy import integrate
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import integrate
 #Define constants
+#exec(open("/Users/luciehoeberichts/Downloads/UCSCIMATL2_NotebooksForBrightspace 4/LuZo_orbiting/Zocie_orbits/scripting.py").read())
+
 grav = 6.67 * (10 ** -11) # gravitational constant
   
 m2 = 1.99 * (10 ** 30) #mass of the sun
@@ -58,3 +60,32 @@ if planetInfo is not None:
     # Handle the case where the planet information is not available
 else:
     print("Sorry, the information for", userPlanet, " is not available.")
+
+# Defining initial values.
+# In this model, planets start on the x-axis where y0=0.
+# x0 then is equal to the initial distance of the planet to the sun: 'x0',
+# that has been chosen to be the perihelion above.
+# Velocity in x-direction is temporarily 0 if planet is on the x-axis, so vx0 is put equal to 0.
+# Velocity in y-direction is at its maximum value in the perihelium, asdefined above.
+x0, y0, vx0, vy0 = x0, 0, 0, vy0
+init= [x0,y0,vx0,vy0]
+t = np.linspace(0, tScale, 400)
+# define function that will return experimental values for velocities andpositions
+def rhs(rv, t):
+    """
+    Parameters
+    ----------
+    rv : vector containing x-position (x), y-position (y), x-velocity (vx) andy-velocity (vy)
+    t : time
+    Returns another vector in the form of a tuple of four numbers (vx, vy, fx,fy)
+-------
+    Takes a vector containing x-position (x), y-position (y), x-velocity (vx) and y-velocity (vy)
+    and a time parameter to calculate the right hand side of the ODE for a two body system
+    and returns a tuple of four numbers. The calculation involves determining the forces
+    acting on the system based on the position and the masses of the objects.
+    """
+    x, y, vx, vy = rv
+    r = np.sqrt(x*x + y*y)
+    fx = -grav*(m1 + m2)*(x/(r*r*r))
+    fy = -grav*(m1 + m2)*(y/(r*r*r))
+    return (vx, vy, fx, fy)
