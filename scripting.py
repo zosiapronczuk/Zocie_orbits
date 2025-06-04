@@ -1,6 +1,6 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import integrate
+#import numpy as np
+#import matplotlib.pyplot as plt
+#from scipy import integrate
 #Define constants
 grav = 6.67 * (10 ** -11) # gravitational constant
   
@@ -31,13 +31,13 @@ def getPlanetInfo(planet):
 8*10e8, 'velocity at perihelion': 7.13e3 },
         'neptune': {'mass': 1.024e26, 'perihelion': 4.47105e12, 'timescale':
 2*10e9, 'velocity at perihelion': 5.47e3 },
-       # 'pluto' : {'mass': 0.013e24, 'perihelion': 4.4368e12, 'timescale':
+        'pluto' : {'mass': 0.013e24, 'perihelion': 4.4368e12, 'timescale':
 7*10e9, 'velocity at perihelion': 6.1e3 }
+    }
 
-
- # Convert the planet name to lowercase
+# Convert the planet name to lowercase
     planet = planet.lower()
-    # Retrieve the information for the given planet
+# Retrieve the information for the given planet
     if planet in planetInfo:
         return planetInfo[planet]
     else:
