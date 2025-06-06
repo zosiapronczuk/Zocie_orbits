@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
-#Define constants
 #exec(open("/Users/luciehoeberichts/Downloads/UCSCIMATL2_NotebooksForBrightspace 4/LuZo_orbiting/Zocie_orbits/scripting.py").read())
 
+#Define constants
 grav = 6.67 * (10 ** -11) # gravitational constant
   
 m2 = 1.99 * (10 ** 30) #mass of the sun
+
 # Obtain values of the mass of the planet, its distance to the sun, wanted timescale,
 # and its maximum velocity using a python dictionary, and asking for user input.
 def getPlanetInfo(planet):
@@ -39,15 +40,19 @@ def getPlanetInfo(planet):
 
 # Convert the planet name to lowercase
     planet = planet.lower()
+
 # Retrieve the information for the given planet
     if planet in planetInfo:
         return planetInfo[planet]
     else:
         return None
+    
 # Ask the user to input a planet
 userPlanet = input("Enter a planet: ")
+
 # Get the information for the entered planet
 planetInfo = getPlanetInfo(userPlanet)
+
 # Check if the planet exists in the database
 if planetInfo is not None:
     m1 = planetInfo['mass']
@@ -70,6 +75,7 @@ else:
 x0, y0, vx0, vy0 = x0, 0, 0, vy0
 init= [x0,y0,vx0,vy0]
 t = np.linspace(0, tScale, 400)
+
 # define function that will return experimental values for velocities andpositions
 def rhs(rv, t):
     """
@@ -96,10 +102,12 @@ xpos = sol[:, 0]
 ypos = sol[:, 1]
 xvel = sol[:, 2]
 yvel = sol[:, 3]
+
 if planetInfo is not None:
     print("So naturally the experimental perihelion is also %4.3E meters." %
 np.max(xpos) )
     print('The experimental aphelion is %4.3E meters.' % np.abs(np.min(xpos)))
+
 # graph of x and y positions over time
 plt.plot(t , xpos, label = "x-position")
 plt.plot(t , ypos, label = "y-position")
@@ -109,6 +117,7 @@ plt.xlabel('Time $(seconds)$')
 plt.ylabel('Position relative to sun $(meters)$')
 plt.grid()
 plt.show()
+
 # graph of x and y velocities over time
 # for an ellips, the orbital velocity is higher when the planet is closer to the sun
 plt.plot(t , xvel, label="x-velocity")
@@ -119,11 +128,13 @@ plt.xlabel('Time $(seconds)$')
 plt.ylabel('Velocities $(meters/second)$')
 plt.grid()
 plt.show()
+
 # graph of x and y positions respective to each other, shows shape of orbit
 plt.plot(xpos, ypos)
 plt.title("Representation of planet's orbit")
 plt.gca().set_aspect('equal')
-plt.scatter(0, 0, color='red', label='Sun')
+plt.scatter(0, 0, color='pink', label='Sun')
 plt.xlabel('Position $(meters)$')
 plt.ylabel('Position $(meters)$')
 plt.legend(loc='upper right')
+plt.show()
