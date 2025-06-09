@@ -180,7 +180,7 @@ plt.loglog(a_line, P_line, '--', label=r"Kepler's Law: $P \propto a^{3/2}$")
 # Labels and grid
 plt.xlabel("Semi-major axis $a$ (AU)")
 plt.ylabel("Orbital period $P$ (years)")
-plt.title("Kepler’s Third Law on Log-Log Scale")
+plt.title("Kepler’s Third Law on Logarithmic Scale")
 #plt.grid(True, which="both", ls="--")
 plt.legend()
 plt.show()
