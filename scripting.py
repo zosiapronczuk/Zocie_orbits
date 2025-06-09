@@ -1,16 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
-#exec(open("/Users/luciehoeberichts/Downloads/UCSCIMATL2_NotebooksForBrightspace 4/LuZo_orbiting/Zocie_orbits/scripting.py").read())
 
 #Define constants
 grav = 6.67384 * (10 ** -11) # gravitational constant
   
-m2 = 1.9891 * (10 ** 30) #mass of the sun
+m2 = 1.9891 * (10 ** 30) # mass of the sun
 
 # Obtain values of the mass of the planet, its distance to the sun, wanted timescale,
 # and its maximum velocity using a python dictionary, and asking for user input.
-def getPlanetInfo(planet):
+def getPlanetInfo(planet=None):
     """
     Defines the known masses, minimum distances to the Sun, and maximum 
     velocities for the planets of our solar system, as obtained from NASA data.
@@ -19,33 +18,32 @@ def getPlanetInfo(planet):
     """
     planetInfo = {
         'mercury': {'mass': 3.285e23, 'perihelion': 4.6e10, 'timescale':
-3*10e6, 'velocity at perihelion':5.897e4 },
+3*10e6, 'velocity at perihelion':5.897e4, 'orbital period (in years)': 0.241, 'semi-major axis (in AU)': 0.39},
         'venus': {'mass': 4.867e24, 'perihelion': 1.0748e11, 'timescale':
-7*10e6, 'velocity at perihelion':3.526e4 },
+7*10e6, 'velocity at perihelion':3.526e4, 'orbital period (in years)': 0.616, 'semi-major axis (in AU)': 0.72},
         'earth': {'mass': 5.972e24, 'perihelion': 1.47095e11, 'timescale':
-1*10e7, 'velocity at perihelion':3.029e4 },
+1*10e7, 'velocity at perihelion':3.029e4, 'orbital period (in years)': 1, 'semi-major axis (in AU)': 1},
         'mars': {'mass': 6.39e23, 'perihelion': 2.0665e11, 'timescale':
-2*10e7, 'velocity at perihelion': 2.65e4 },
+2*10e7, 'velocity at perihelion': 2.65e4, 'orbital period (in years)': 1.882, 'semi-major axis (in AU)': 1.52},
         'jupiter': {'mass': 1.898e27, 'perihelion': 7.40595e11, 'timescale':
-2*10e8, 'velocity at perihelion': 1.372e4 },
+2*10e8, 'velocity at perihelion': 1.372e4, 'orbital period (in years)': 11.87, 'semi-major axis (in AU)': 5.2},
         'saturn': {'mass': 5.683e26, 'perihelion': 1.357554e12, 'timescale':
-4*10e8, 'velocity at perihelion': 1.014e4 },
+4*10e8, 'velocity at perihelion': 1.014e4, 'orbital period (in years)': 29.467, 'semi-major axis (in AU)': 9.58},
         'uranus': {'mass': 8.681e25, 'perihelion': 2.732696e12, 'timescale':
-8*10e8, 'velocity at perihelion': 7.13e3 },
+8*10e8, 'velocity at perihelion': 7.13e3, 'orbital period (in years)': 84.069, 'semi-major axis (in AU)': 19.2},
         'neptune': {'mass': 1.024e26, 'perihelion': 4.47105e12, 'timescale':
-2*10e9, 'velocity at perihelion': 5.47e3 },
+2*10e9, 'velocity at perihelion': 5.47e3, 'orbital period (in years)': 164.901, 'semi-major axis (in AU)': 30.05},
         'pluto' : {'mass': 0.013e24, 'perihelion': 4.4368e12, 'timescale':
-7*10e9, 'velocity at perihelion': 6.1e3 }
+7*10e9, 'velocity at perihelion': 6.1e3, 'orbital period (in years)': 248.109, 'semi-major axis (in AU)': 39.48},
+        'zosia' : {'mass': 0.12e3, 'perihelion': 4.12 , 'timescale':
+12*10e9, 'velocity at perihelion': 6.e1, 'orbital period (in years)': 19, 'semi-major axis (in AU)': 163}
     }
 
-# Convert the planet name to lowercase
-    planet = planet.lower()
-
 # Retrieve the information for the given planet
-    if planet in planetInfo:
-        return planetInfo[planet]
-    else:
-        return None
+    if planet is None:
+        return planetInfo
+    planet = planet.lower()
+    return planetInfo.get(planet, None)
     
 # Ask the user to input a planet
 userPlanet = input("Enter a planet: ")
@@ -61,15 +59,13 @@ if planetInfo is not None:
     vy0 = planetInfo[ 'velocity at perihelion']
     print("According to NASA data, the mass of", userPlanet," is", m1, "kilograms,")
     print("and the minimum distance from the Sun to", userPlanet," is %4.3E meters." % x0)
-    # The code continues working with this planet mass and distance
-    # Handle the case where the planet information is not available
+    # planet is not available
 else:
     print("Sorry, the information for", userPlanet, " is not available.")
 
 # Defining initial values.
-# In this model, planets start on the x-axis where y0=0.
-# x0 then is equal to the initial distance of the planet to the sun: 'x0',
-# that has been chosen to be the perihelion above.
+# planets start on the x-axis where y0=0.
+# x0 is equal to the initial distance of the planet to the sun: 'x0', that has been chosen to be the perihelion above.
 # Velocity in x-direction is temporarily 0 if planet is on the x-axis, so vx0 is put equal to 0.
 # Velocity in y-direction is at its maximum value in the perihelium, asdefined above.
 x0, y0, vx0, vy0 = x0, 0, 0, vy0
@@ -81,14 +77,14 @@ def rhs(rv, t):
     """
     Parameters
     ----------
-    rv : vector containing x-position (x), y-position (y), x-velocity (vx) andy-velocity (vy)
+    rv : vector, x-position (x), y-position (y), x-velocity (vx) andy-velocity (vy)
     t : time
-    Returns another vector in the form of a tuple of four numbers (vx, vy, fx,fy)
+    Returns vector in the form of a tuple of four numbers (vx, vy, fx,fy)
 -------
     Takes a vector containing x-position (x), y-position (y), x-velocity (vx) and y-velocity (vy)
     and a time parameter to calculate the right hand side of the ODE for a two body system
-    and returns a tuple of four numbers. The calculation involves determining the forces
-    acting on the system based on the position and the masses of the objects.
+    and returns a tuple of four numbers,
+    determining the forces acting on the system based on the position and the masses of the objects.
     """
     x, y, vx, vy = rv
     r = np.sqrt(x*x + y*y)
@@ -144,11 +140,47 @@ plt.show()
 Square of the period "P" is proportional to the cube of the semimajor axis "a"
 """
 
-# Defining P
+allPlanets = getPlanetInfo()
+for planet, info in allPlanets.items():
+    P = info['orbital period (in years)']
+    a = info['semi-major axis (in AU)']
+#    print(f"{planet.capitalize()}: P = {P} years, a = {a} AU")
 
-# Defining a
+# Get all planet data
+allPlanets = getPlanetInfo()
 
-# Checking if P**2 == a**3 --> plot (p againt a on a log scale)
-plt.xscale #choose log scale for both x and y 
+# Prepare lists for a and P
+a_vals = []
+P_vals = []
+labels = []
 
+for planet, info in allPlanets.items():
+    P = info['orbital period (in years)']
+    a = info['semi-major axis (in AU)']
+    a_vals.append(a)
+    P_vals.append(P)
+    labels.append(planet.capitalize())
 
+# Convert to numpy arrays
+a_vals = np.array(a_vals)
+P_vals = np.array(P_vals)
+
+# Plotting on log-log scale
+plt.loglog(a_vals, P_vals, 'o', label='Planetary Data')
+
+# Label each point
+for i, label in enumerate(labels):
+    plt.text(a_vals[i], P_vals[i], label)
+
+# Kepler's Law reference line: P = a^(3/2)
+a_line = np.linspace(min(a_vals)*0.8, max(a_vals)*1.2, 100)
+P_line = a_line ** (3/2)
+plt.loglog(a_line, P_line, '--', label=r"Kepler's Law: $P \propto a^{3/2}$")
+
+# Labels and grid
+plt.xlabel("Semi-major axis $a$ (AU)")
+plt.ylabel("Orbital period $P$ (years)")
+plt.title("Kepler’s Third Law on Log-Log Scale")
+#plt.grid(True, which="both", ls="--")
+plt.legend()
+plt.show()
