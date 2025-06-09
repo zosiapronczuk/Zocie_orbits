@@ -4,9 +4,9 @@ from scipy import integrate
 #exec(open("/Users/luciehoeberichts/Downloads/UCSCIMATL2_NotebooksForBrightspace 4/LuZo_orbiting/Zocie_orbits/scripting.py").read())
 
 #Define constants
-grav = 6.67 * (10 ** -11) # gravitational constant
+grav = 6.67384 * (10 ** -11) # gravitational constant
   
-m2 = 1.99 * (10 ** 30) #mass of the sun
+m2 = 1.9891 * (10 ** 30) #mass of the sun
 
 # Obtain values of the mass of the planet, its distance to the sun, wanted timescale,
 # and its maximum velocity using a python dictionary, and asking for user input.
@@ -104,7 +104,7 @@ xvel = sol[:, 2]
 yvel = sol[:, 3]
 
 if planetInfo is not None:
-    print("So naturally the experimental perihelion is also %4.3E meters." %
+    print("So the experimental perihelion is also %4.3E meters." %
 np.max(xpos) )
     print('The experimental aphelion is %4.3E meters.' % np.abs(np.min(xpos)))
 
@@ -120,8 +120,8 @@ plt.show()
 
 # graph of x and y velocities over time
 # for an ellips, the orbital velocity is higher when the planet is closer to the sun
-plt.plot(t , xvel, label="x-velocity")
-plt.plot(t , yvel, label="y-velocity")
+plt.plot(t , xvel, color='pink', label="x-velocity")
+plt.plot(t , yvel, color='purple', label="y-velocity")
 plt.title("Planet's velocities in x- and y-direction")
 plt.legend(loc='best')
 plt.xlabel('Time $(seconds)$')
@@ -138,3 +138,17 @@ plt.xlabel('Position $(meters)$')
 plt.ylabel('Position $(meters)$')
 plt.legend(loc='upper right')
 plt.show()
+
+### Checking Kepler --> 
+"""
+Square of the period "P" is proportional to the cube of the semimajor axis "a"
+"""
+
+# Defining P
+
+# Defining a
+
+# Checking if P**2 == a**3 --> plot (p againt a on a log scale)
+plt.xscale #choose log scale for both x and y 
+
+
